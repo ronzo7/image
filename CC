@@ -1,0 +1,439 @@
+#CONTRAST STRETCHING
+ 
+from skimage import data,io,color
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+img = data.camera()
+io.imshow(img)
+hist = [0]*256
+ 
+h,w = img.shape
+for i in range(h):
+    for j in range(w):
+        hist[img[i][j]]+=1
+plt.stem(hist)
+ 
+tot = h*w
+for i in range(0,256):
+    hist[i]=hist[i]/tot
+for i in range(1,256):
+    hist[i]+=hist[i-1]
+c = img
+for i in range(h):
+    for j in range(w):
+        c[i][j] = round(hist[img[i][j]]*255)
+io.imshow(img)
+ 
+freq2=[0]*256
+for i in range(h):
+    for j in range(w):
+        freq2[c[i][j]]+=1
+plt.stem(freq2)
+ 
+ 
+ 
+#HISTOGRAM EQUALIZATION
+ 
+from skimage import data,io,filters,color
+from skimage.exposure import is_low_contrast
+img1=data.moon()
+ 
+io.imshow(img1)
+ 
+import matplotlib.pyplot as plt
+ 
+h,w=img1.shape
+arr= [0]*256
+for i in range(h):
+    for j in range(w):
+        arr[img1[i][j]]+=1
+plt.stem(arr)
+ 
+f=[0]*256
+c=3
+for i in range(h):
+    for j in range(w):
+        img1[i,j]=img1[i,j]*c
+        f[img1[i,j]]+=1
+plt.stem(f)
+ 
+io.imshow(img1)
+ 
+ 
+ 
+#BITPLANE SLICING
+ 
+from skimage import data,io,filters,color
+from skimage.exposure import is_low_contrast
+image2 = data.camera()
+io.imshow(image2)
+ 
+h,w = image2.shape
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<7))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<6))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<5))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<4))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<3))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<2))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<1))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+img1 = data.camera()
+for i in range(h):
+    for j in range(w):
+        if(img1[i][j] & ((1<<0))):
+            img1[i][j] = 255
+        else:
+            img1[i][j] =  0
+io.imshow(img1)  
+ 
+ 
+ 
+#ARITHMETIC OPERATIONS
+ 
+from skimage import data,io,color
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+#IMG ADDITION
+ 
+a=data.moon()
+io.imshow(a)
+ 
+b=data.camera()
+io.imshow(b)
+ 
+res=a+b
+io.imshow(res)
+ 
+#IMG SUBTRACTION
+ 
+res=a-b
+io.imshow(res)
+ 
+#IMG MULTIPLICATION
+ 
+res=0.7*a+0.3*b
+io.imshow(res)
+ 
+#AND IMAGES
+ 
+res=a&b
+io.imshow(res)
+ 
+#OR IMAGES
+ 
+res=a|b
+io.imshow(res)
+ 
+#IMG POW IMG
+ 
+res=a^b
+io.imshow(res)
+ 
+#LOG TRANSFORM
+ 
+import math
+ma=-1
+for i in range(h):
+    for j in range(w):
+        ma=max(ma,a[i][j])
+c=255/math.log(1+ma)
+ 
+for i in range(h):
+    for j in range(w):
+        a[i][j]=c*math.log(1+a[i][j])
+io.imshow(a)
+ 
+#POWER LAW
+ 
+a=data.camera()
+for i in range(h):
+    for j in range(w):
+        a[i][j]=1*math.pow((a[i][j]+1),1.2)
+io.imshow(a)
+ 
+ 
+ 
+#FILTERS
+ 
+from skimage import data,io,filters
+import numpy as np
+image=io.imread('LENA.jpg')
+io.imshow(image)
+ 
+#AVERAGE FILTER
+ 
+h,w = image.shape
+image1=image
+for i in range(1,image.shape[0]-1):
+    for j in range(1,image.shape[1]-1):
+        image1[i][j] = min((image[i-1][j]+image[i+1][j]+image[i][j+1]+image[i][j-1]+image[i][j])/5,255)
+io.imshow(image1)
+ 
+image1=image
+for i in range(1,h-1):
+    for j in range(1,w-1):
+        image1[i][j] = min((image[i-1][j]+image[i+1][j]+image[i][j+1]+image[i][j-1]+image[i][j]+image[i-1][j-1]+image[i-1][j+1]+image[i+1][j-1]+image[i+1][j+1])/9,255)
+io.imshow(image1)
+ 
+#MIN-MAX FILTER
+ 
+image=io.imread('LENA.jpg')
+for i in range(1,h-1):
+    for j in range(1,w-1):
+        x = max(image[i-1][j],image[i+1][j],image[i][j-1],image[i][j+1],image[i-1][j-1],image[i-1][j+1],image[i+1][j-1],image[i+1][j+1])
+        k = min(image[i-1][j],image[i+1][j],image[i][j-1],image[i][j+1],image[i-1][j-1],image[i-1][j+1],image[i+1][j-1],image[i+1][j+1])
+        image[i][j] = min(image[i][j],x)
+        image[i][j] = max(image[i][j],k)
+io.imshow(image) 
+ 
+#MEDIAN FILTER
+ 
+image=io.imread('LENA.jpg')
+for i in range(1,h-1):
+    for j in range(1,w-1):
+        x = [image[i-1][j],image[i+1][j],image[i][j-1],image[i][j+1],image[i-1][j-1],image[i-1][j+1],image[i+1][j-1],image[i+1][j+1],image[i][j]]
+        x.sort()
+        image[i][j] = x[4]
+io.imshow(image) 
+ 
+#MASKING
+ 
+img=io.imread('LENA.jpg')
+m,n = img.shape
+mask = np.ones([3, 3], dtype = int)
+mask = mask / 9
+img_new = np.zeros([m, n])
+ 
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = img[i-1, j-1]*mask[0, 0]+img[i-1, j]*mask[0, 1]+img[i-1, j + 1]*mask[0, 2]+img[i, j-1]*mask[1, 0]+ img[i, j]*mask[1, 1]+img[i, j + 1]*mask[1, 2]+img[i + 1, j-1]*mask[2, 0]+img[i + 1, j]*mask[2, 1]+img[i + 1, j + 1]*mask[2, 2]
+ 
+        img_new[i, j]= temp
+ 
+img_new = img_new.astype(np.uint8)
+io.imshow(img_new)         
+ 
+#CONSERVATIVE SMOOTHING
+ 
+def conservative_smoothing_gray(data, filter_size):
+    temp = []
+    indexer = filter_size // 2
+    new_image = data.copy()   
+    nrow, ncol = data.shape    
+    for i in range(nrow):        
+        for j in range(ncol):
+            for k in range(i-indexer, i+indexer+1):
+                for m in range(j-indexer, j+indexer+1):
+                    if (k > -1) and (k < nrow):
+                        if (m > -1) and (m < ncol):
+                            temp.append(data[k,m])                            
+            temp.remove(data[i,j])
+            max_value = max(temp)
+            min_value = min(temp)
+            if data[i,j] > max_value:
+                new_image[i,j] = max_value
+            elif data[i,j] < min_value:
+                new_image[i,j] = min_value
+            temp =[]
+ 
+    return new_image.copy()
+ 
+img2=conservative_smoothing_gray(img,19)
+io.imshow(img2)
+ 
+#WEIGHTED AVERAGE
+ 
+l1=[1,2,1]
+l2=[2,4,2]
+l3=[1,2,1]
+mask=np.matrix([l1,l2,l3])
+img_new=np.zeros([m,n])
+ 
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = img[i-1, j-1]*mask[0, 0]+img[i-1, j]*mask[0, 1]+img[i-1, j + 1]*mask[0, 2]+img[i, j-1]*mask[1, 0]+ img[i, j]*mask[1, 1]+img[i, j + 1]*mask[1, 2]+img[i + 1, j-1]*mask[2, 0]+img[i + 1, j]*mask[2, 1]+img[i + 1, j + 1]*mask[2, 2]
+ 
+        img_new[i, j]= temp/24
+ 
+img_new = img_new.astype(np.uint8)
+io.imshow(img_new)
+ 
+ 
+ 
+#EDGE DETECTION FILTERS
+#SOBEL
+ 
+from skimage import data,io,filters
+import numpy as np
+ 
+a=data.camera()
+b=data.camera()
+io.imshow(a)
+ 
+l1=[-1,0,1]
+l2=[-2,0,2]
+l3=[-1,0,1]
+mask=np.matrix([l1,l2,l3])
+m,n=a.shape
+img_new=np.zeros([m,n])
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = a[i-1, j-1]*mask[0, 0]+a[i-1, j]*mask[0, 1]+a[i-1, j + 1]*mask[0, 2]+a[i, j-1]*mask[1, 0]+ a[i, j]*mask[1, 1]+a[i, j + 1]*mask[1, 2]+a[i + 1, j-1]*mask[2, 0]+a[i + 1, j]*mask[2, 1]+a[i + 1, j + 1]*mask[2, 2]
+        img_new[i, j]= max(0,min(255,temp))
+img_new = img_new.astype(np.uint8)
+np.absolute(img_new)
+io.imshow(img_new)
+ 
+l11=[1,2,1]
+l12=[0,0,0]
+l13=[-1,-2,1]
+mask1=np.matrix([l11,l12,l13])
+img_new1=np.zeros([m,n])
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = img_new[i-1, j-1]*mask1[0, 0]+img_new[i-1, j]*mask1[0, 1]+img_new[i-1, j + 1]*mask1[0, 2]+img_new[i, j-1]*mask1[1, 0]+ img_new[i, j]*mask1[1, 1]+img_new[i, j + 1]*mask1[1, 2]+img_new[i + 1, j-1]*mask1[2, 0]+img_new[i + 1, j]*mask1[2, 1]+img_new[i + 1, j + 1]*mask1[2, 2]
+        img_new1[i, j]= max(0,min(255,temp))
+img_new1 = img_new1.astype(np.uint8)
+np.absolute(img_new1)
+io.imshow(img_new1)
+ 
+c=img_new+img_new1
+io.imshow(c)
+ 
+d=filters.sobel(a)
+io.imshow(d)
+ 
+#PREWITT
+ 
+from skimage import data,io,filters
+import numpy as np
+ 
+a=data.camera()
+b=data.camera()
+io.imshow(a)
+ 
+l1=[1,1,1]
+l2=[0,0,0]
+l3=[-1,-1,-1]
+mask=np.matrix([l1,l2,l3])
+m,n=a.shape
+img_new=np.zeros([m,n])
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = a[i-1, j-1]*mask[0, 0]+a[i-1, j]*mask[0, 1]+a[i-1, j + 1]*mask[0, 2]+a[i, j-1]*mask[1, 0]+ a[i, j]*mask[1, 1]+a[i, j + 1]*mask[1, 2]+a[i + 1, j-1]*mask[2, 0]+a[i + 1, j]*mask[2, 1]+a[i + 1, j + 1]*mask[2, 2]
+        img_new[i, j]= max(0,min(255,temp))
+img_new = img_new.astype(np.uint8)
+io.imshow(img_new)
+ 
+l11=[-1,0,1]
+l12=[-1,0,1]
+l13=[-1,0,1]
+mask1=np.matrix([l11,l12,l13])
+img_new1=np.zeros([m,n])
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = img_new[i-1, j-1]*mask1[0, 0]+img_new[i-1, j]*mask1[0, 1]+img_new[i-1, j + 1]*mask1[0, 2]+img_new[i, j-1]*mask1[1, 0]+ img_new[i, j]*mask1[1, 1]+img_new[i, j + 1]*mask1[1, 2]+img_new[i + 1, j-1]*mask1[2, 0]+img_new[i + 1, j]*mask1[2, 1]+img_new[i + 1, j + 1]*mask1[2, 2]
+        img_new1[i, j]= max(0,min(255,temp))
+img_new1 = img_new1.astype(np.uint8)
+np.absolute(img_new1)
+io.imshow(img_new1)
+ 
+c=img_new+img_new1
+io.imshow(c)
+ 
+d=filters.prewitt(a)
+io.imshow(d)
+ 
+#ROBERT CROSS
+ 
+from skimage import data,filters,io
+import numpy as np
+img = data.camera()
+io.imshow(img)
+ 
+l1=[1,0]
+l2=[0,-1]
+mask=np.matrix([l1,l2])
+m,n=img.shape
+m,n
+a=img
+img_new=np.zeros([m,n])
+for i in range(0, m-1):
+    for j in range(0, n-1):
+        temp = a[i,j]*mask[0, 0]+a[i+1, j]*mask[1,0]+a[i,j+1]*mask[0,1]+a[i+1, j+1]*mask[1,1]
+        img_new[i, j]= max(0,min(255,temp))
+img_new = img_new.astype(np.uint8)
+io.imshow(img_new)
+ 
+l11=[0,1]
+l12=[-1,0]
+b=img_new
+mask1=np.matrix([l11,l12])
+img_new1=np.zeros([m,n])
+for i in range(1, m-1):
+    for j in range(1, n-1):
+        temp = b[i, j]*mask1[0, 0]+b[i+1, j]*mask1[1,0]+b[i,j+1]*mask1[0,1]+b[i+1, j+1]*mask1[1, 1]
+        img_new1[i, j]= max(0,min(255,temp))
+img_new1 = img_new1.astype(np.uint8)
+np.absolute(img_new1)
+io.imshow(img_new1)
+ 
+c=img_new+img_new1
+io.imshow(c)
