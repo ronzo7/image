@@ -1,0 +1,35 @@
+#include <graphics.h>
+#include <time.h>
+
+int main()
+{
+    int gd = DETECT, gm, hour, minute, second;
+    char time_string[8];
+
+    initgraph(&gd, &gm, "C:\\TC\\BGI");
+    
+    while (1) {
+        // Get the current time
+        time_t current_time = time(NULL);
+        struct tm* tm_ptr = localtime(&current_time);
+        hour = tm_ptr->tm_hour;
+        minute = tm_ptr->tm_min;
+        second = tm_ptr->tm_sec;
+
+        // Convert the time to string format
+        sprintf(time_string, "%02d:%02d:%02d", hour, minute, second);
+
+        // Clear the screen
+        cleardevice();
+
+        // Display the time string
+        outtextxy(100, 100, time_string);
+
+        // Delay for 1 second
+        delay(1000);
+    }
+
+    closegraph();
+
+    return 0;
+}
